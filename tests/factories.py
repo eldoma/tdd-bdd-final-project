@@ -58,6 +58,8 @@ class ProductFactory(factory.Factory):
             Category.AUTOMOTIVE,
             Category.TOOLS,
         ]
-    ) # Exercise 1: Create Fake Products
+    )
+
+     # Exercise 1: Create Fake Products
 
    ## Add code to create Fake Products 
