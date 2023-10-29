@@ -181,3 +181,43 @@ class TestProductRoutes(TestCase):
         data = response.get_json()
         # logging.debug("data = %s", data)
         return len(data)
+
+    ######################################################################
+    # 3.1. Write a Test Case to Read a Product
+    ######################################################################
+
+    def test_get_product(self):
+        """It should Get a single Product"""
+        # get the id of a product
+        test_product = self._create_products(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_product.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_product.name) # Exercise 3.1 Create Test Cases and Code for REST API: Write a Test Case to Read a Product 
+
+    ######################################################################
+    # 3.2.  Write the Code to make the Read Test case pass: READ A PRODUCT
+    ######################################################################
+    @app.route("/products/<int:product_id>", methods=["GET"])
+    def get_products(product_id):
+        """
+        Retrieve a single Product
+        This endpoint will return a Product based on it's id
+        """
+        app.logger.info("Request to Retrieve a product with id [%s]", product_id)
+        product = Product.find(product_id)
+        if not product:
+            abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
+        app.logger.info("Returning product: %s", product.name)
+        return product.serialize(), status.HTTP_200_OK # Exercise 3.2 Create Test Cases and Code for REST API: Write the Code to make the Read Test case pass 
+
+   ######################################################################
+    # 3.3.  Write the Code for reading an account that was not found
+    ######################################################################
+
+    def test_get_product_not_found(self):
+        """It should not Get a Product thats not found"""
+        response = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        self.assertIn("was not found", data["message"]) # Exercise 3.3 Create Test Cases and Code for REST API: Write the Code  for reading an account that was not found: 
