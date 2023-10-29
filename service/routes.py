@@ -184,72 +184,9 @@ def delete_products(product_id):
 
     return "", status.HTTP_204_NO_CONTENT
 
-######################################################################
-# LIST PRODUCTS
-######################################################################
-@app.route("/products", methods=["GET"])
-def list_products():
-    """Returns a list of Products"""
-    app.logger.info("Request to list Products...")
-
-    products = Product.all()
-
-    results = [product.serialize() for product in products]
-    app.logger.info("[%s] Products returned", len(results))
-    return results, status.HTTP_200_OK  # 4.3. REST API implementation for list all products
 
 ######################################################################
-# LIST PRODUCTS BY NAME
-######################################################################
-@app.route("/products", methods=["GET"])
-def list_products():
-    """Returns a list of Products"""
-    app.logger.info("Request to list Products...")
-
-    products = []
-    name = request.args.get("name")
-
-    if name:
-        app.logger.info("Find by name: %s", name)
-        products = Product.find_by_name(name)
-    else:
-        app.logger.info("Find all")
-        products = Product.all()
-
-    results = [product.serialize() for product in products]
-    app.logger.info("[%s] Products returned", len(results))
-    return results, status.HTTP_200_OK #4.4. REST API implementation for List By Name function
-
-######################################################################
-# LIST PRODUCTS BY CATEGORY
-######################################################################
-@app.route("/products", methods=["GET"])
-def list_products():
-    """Returns a list of Products"""
-    app.logger.info("Request to list Products...")
-
-    products = []
-    name = request.args.get("name")
-    category = request.args.get("category")
-
-    if name:
-        app.logger.info("Find by name: %s", name)
-        products = Product.find_by_name(name)
-    elif category:
-        app.logger.info("Find by category: %s", category)
-        # create enum from string
-        category_value = getattr(Category, category.upper())
-        products = Product.find_by_category(category_value)
-    else:
-        app.logger.info("Find all")
-        products = Product.all()
-
-    results = [product.serialize() for product in products]
-    app.logger.info("[%s] Products returned", len(results))
-    return results, status.HTTP_200_OK # 4.5. REST API implementation for List By Category function
-
-######################################################################
-# LIST PRODUCTS BY AVAILABILITY
+# LIST PRODUCTS 
 ######################################################################
 @app.route("/products", methods=["GET"])
 def list_products():
