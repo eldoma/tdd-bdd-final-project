@@ -42,12 +42,12 @@ db = SQLAlchemy()
 
 def init_db(app):
     """Initialize the SQLAlchemy app"""
-    Product.init_db(app)
+    Product.init_db(app) # 1. Methods & Classes: 1. db = SQLAlchemy() 
 
 
 class DataValidationError(Exception):
-    """Used for an data validation errors when deserializing"""
-
+    """Used for an data validation errors when deserializing""" 
+    # 1. Methods & Classes : 2. class DataValidationError(Exception)
 
 class Category(Enum):
     """Enumeration of valid Product Categories"""
@@ -57,7 +57,7 @@ class Category(Enum):
     FOOD = 2
     HOUSEWARES = 3
     AUTOMOTIVE = 4
-    TOOLS = 5
+    TOOLS = 5  # 1. Methods & Classes : 3. Enumeration of Product Categories
 
 
 class Product(db.Model):
@@ -78,7 +78,7 @@ class Product(db.Model):
     available = db.Column(db.Boolean(), nullable=False, default=True)
     category = db.Column(
         db.Enum(Category), nullable=False, server_default=(Category.UNKNOWN.name)
-    )
+    ) #  1. Methods & Classes : 4.Product Class
 
     ##################################################
     # INSTANCE METHODS
@@ -86,6 +86,8 @@ class Product(db.Model):
 
     def __repr__(self):
         return f"<Product {self.name} id=[{self.id}]>"
+
+     # 2. Instance Methods: 1. __repr__() method
 
     def create(self):
         """
@@ -95,7 +97,7 @@ class Product(db.Model):
         # id must be none to generate next primary key
         self.id = None  # pylint: disable=invalid-name
         db.session.add(self)
-        db.session.commit()
+        db.session.commit() #2. Instance Methods: 2. create() method
 
     def update(self):
         """
@@ -104,13 +106,13 @@ class Product(db.Model):
         logger.info("Saving %s", self.name)
         if not self.id:
             raise DataValidationError("Update called with empty ID field")
-        db.session.commit()
+        db.session.commit() #2. Instance Methods: 3. update() method
 
     def delete(self):
         """Removes a Product from the data store"""
         logger.info("Deleting %s", self.name)
         db.session.delete(self)
-        db.session.commit()
+        db.session.commit() #2. Instance Methods: 4. delete() method
 
     def serialize(self) -> dict:
         """Serializes a Product into a dictionary"""
@@ -121,7 +123,7 @@ class Product(db.Model):
             "price": str(self.price),
             "available": self.available,
             "category": self.category.name  # convert enum to string
-        }
+        }  #2. Instance Methods: 5. serialize() method
 
     def deserialize(self, data: dict):
         """
@@ -149,7 +151,7 @@ class Product(db.Model):
             raise DataValidationError(
                 "Invalid product: body of request contained bad or no data " + str(error)
             ) from error
-        return self
+        return self #2. Instance Methods: 6. deserialize() method
 
     ##################################################
     # CLASS METHODS
@@ -167,13 +169,13 @@ class Product(db.Model):
         # This is where we initialize SQLAlchemy from the Flask app
         db.init_app(app)
         app.app_context().push()
-        db.create_all()  # make our sqlalchemy tables
+        db.create_all()  # make our sqlalchemy tables, 3. Class Methods: 1.init_db() method
 
     @classmethod
     def all(cls) -> list:
         """Returns all of the Products in the database"""
         logger.info("Processing all Products")
-        return cls.query.all()
+        return cls.query.all() # 3. Class Methods: 2.all() method
 
     @classmethod
     def find(cls, product_id: int):
@@ -187,7 +189,7 @@ class Product(db.Model):
 
         """
         logger.info("Processing lookup for id %s ...", product_id)
-        return cls.query.get(product_id)
+        return cls.query.get(product_id) # 3. Class Methods: 3. all() method
 
     @classmethod
     def find_by_name(cls, name: str) -> list:
@@ -201,7 +203,7 @@ class Product(db.Model):
 
         """
         logger.info("Processing name query for %s ...", name)
-        return cls.query.filter(cls.name == name)
+        return cls.query.filter(cls.name == name) # 3. Class Methods: 4. find_by_name() method
 
     @classmethod
     def find_by_price(cls, price: Decimal) -> list:
@@ -218,7 +220,7 @@ class Product(db.Model):
         price_value = price
         if isinstance(price, str):
             price_value = Decimal(price.strip(' "'))
-        return cls.query.filter(cls.price == price_value)
+        return cls.query.filter(cls.price == price_value) # 3. Class Methods: 5. find_by_price() method
 
     @classmethod
     def find_by_availability(cls, available: bool = True) -> list:
@@ -232,7 +234,7 @@ class Product(db.Model):
 
         """
         logger.info("Processing available query for %s ...", available)
-        return cls.query.filter(cls.available == available)
+        return cls.query.filter(cls.available == available) # 3. Class Methods: 6. find_by_availability() method
 
     @classmethod
     def find_by_category(cls, category: Category = Category.UNKNOWN) -> list:
@@ -245,5 +247,5 @@ class Product(db.Model):
         :rtype: list
 
         """
-        logger.info("Processing category query for %s ...", category.name)
+        logger.info("Processing category query for %s ...", category.name) # 3. Class Methods: 7. find_by_category() method
         return cls.query.filter(cls.category == category)

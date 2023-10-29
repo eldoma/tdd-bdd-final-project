@@ -25,13 +25,16 @@ Test cases can be run with the following:
     nosetests --stop tests/test_service.py:TestProductService
 """
 import os
-import logging
-from decimal import Decimal
+import logging # Reading : Import Statements
+from decimal import Decimal # Reading : Import Statements
 from unittest import TestCase
 from service import app
 from service.common import status
 from service.models import db, init_db, Product
 from tests.factories import ProductFactory
+from enum import Enum # Reading : Import Statements
+from flask import Flask # Reading : Import Statements
+from flask_sqlalchemy import SQLAlchemy # Reading : Import Statements
 
 # Disable all but critical errors during normal test run
 # uncomment for debugging failing tests
