@@ -31,14 +31,15 @@ available (boolean) - True for products that are available for adoption
 import logging
 from enum import Enum
 from decimal import Decimal
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from enum import Enum # Reading : Import Statements
+from flask import Flask # Reading : Import Statements
+from flask_sqlalchemy import SQLAlchemy # Reading : Import Statements
+import requests  # Import requests for making HTTP requests
 
 logger = logging.getLogger("flask.app")
 
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
-
 
 def init_db(app):
     """Initialize the SQLAlchemy app"""
@@ -57,7 +58,8 @@ class Category(Enum):
     FOOD = 2
     HOUSEWARES = 3
     AUTOMOTIVE = 4
-    TOOLS = 5  # 1. Methods & Classes : 3. Enumeration of Product Categories
+    TOOLS = 5  
+    # 1. Methods & Classes : 3. Enumeration of Product Categories
 
 
 class Product(db.Model):
@@ -84,6 +86,14 @@ class Product(db.Model):
     # INSTANCE METHODS
     ##################################################
 
+    def get_product_count(self):
+        """save the current number of products"""
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        # logging.debug("data = %s", data)
+        return len(data)
+        
     def __repr__(self):
         return f"<Product {self.name} id=[{self.id}]>"
 
@@ -97,7 +107,7 @@ class Product(db.Model):
         # id must be none to generate next primary key
         self.id = None  # pylint: disable=invalid-name
         db.session.add(self)
-        db.session.commit() #2. Instance Methods: 2. create() method
+        db.session.commit() # 2. Instance Methods: 2. create() method
 
     def update(self):
         """
@@ -106,13 +116,13 @@ class Product(db.Model):
         logger.info("Saving %s", self.name)
         if not self.id:
             raise DataValidationError("Update called with empty ID field")
-        db.session.commit() #2. Instance Methods: 3. update() method
+        db.session.commit() # 2. Instance Methods: 3. update() method
 
     def delete(self):
         """Removes a Product from the data store"""
         logger.info("Deleting %s", self.name)
         db.session.delete(self)
-        db.session.commit() #2. Instance Methods: 4. delete() method
+        db.session.commit() # 2. Instance Methods: 4. delete() method
 
     def serialize(self) -> dict:
         """Serializes a Product into a dictionary"""
@@ -123,7 +133,7 @@ class Product(db.Model):
             "price": str(self.price),
             "available": self.available,
             "category": self.category.name  # convert enum to string
-        }  #2. Instance Methods: 5. serialize() method
+        }  # 2. Instance Methods: 5. serialize() method
 
     def deserialize(self, data: dict):
         """

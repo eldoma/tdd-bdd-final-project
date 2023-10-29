@@ -108,14 +108,6 @@ def create_products():
 #
 # PLACE YOUR CODE HERE TO READ A PRODUCT
 #
-@app.route("/products/<int:product_id>", methods=["GET"])
-def get_product_count(self):
-    """save the current number of products"""
-    response = self.client.get(BASE_URL)
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    data = response.get_json()
-    # logging.debug("data = %s", data)
-    return len(data)
 
 ######################################################################
 # READ A PRODUCT

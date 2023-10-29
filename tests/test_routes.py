@@ -32,9 +32,7 @@ from service import app
 from service.common import status
 from service.models import db, init_db, Product
 from tests.factories import ProductFactory
-from enum import Enum # Reading : Import Statements
-from flask import Flask # Reading : Import Statements
-from flask_sqlalchemy import SQLAlchemy # Reading : Import Statements
+
 
 # Disable all but critical errors during normal test run
 # uncomment for debugging failing tests
@@ -77,6 +75,7 @@ class TestProductRoutes(TestCase):
 
     def tearDown(self):
         db.session.remove()
+
 
     ############################################################
     # Utility function to bulk create products
